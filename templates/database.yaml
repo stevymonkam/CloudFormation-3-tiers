@@ -1,23 +1,48 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Database resources
+Description: RDS MySQL database with subnet group
 
 Parameters:
   VPCId:
     Type: String
+  DatabaseSubnet1:
+    Type: String
+  DatabaseSubnet2:
+    Type: String
+  RDSSecurityGroup:
+    Type: String
 
 Resources:
-
-  RDSSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
+  DBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
     Properties:
-      VpcId: !Ref VPCId
-      GroupDescription: Allow MySQL
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 3306
-          ToPort: 3306
-          CidrIp: 0.0.0.0/0
+      DBSubnetGroupDescription: DB subnet group
+      SubnetIds:
+        - !Ref DatabaseSubnet1
+        - !Ref DatabaseSubnet2
+      Tags:
+        - Key: Name
+          Value: my-db-subnet-group
+
+  RDSInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceIdentifier: my-rds
+      Engine: mysql
+      EngineVersion: '5.7'
+      DBInstanceClass: db.t3.micro
+      AllocatedStorage: 20
+      StorageType: gp2
+      MasterUsername: admin
+      MasterUserPassword: password
+      MultiAZ: true
+      VPCSecurityGroups:
+        - !Ref RDSSecurityGroup
+      DBSubnetGroupName: !Ref DBSubnetGroup
+      PubliclyAccessible: false
+      BackupRetentionPeriod: 1
 
 Outputs:
-  RDSSecurityGroupId:
-    Value: !Ref RDSSecurityGroup
+  RDSInstanceEndpoint:
+    Value: !GetAtt RDSInstance.Endpoint.Address
+  RDSInstanceId:
+    Value: !Ref RDSInstance
