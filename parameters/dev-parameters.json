@@ -6,6 +6,12 @@
     {
       "ParameterKey": "InstanceType",
       "ParameterValue": "t3.micro"
+    },
+    {
+      "ParameterKey": "KeyName",
+      "ParameterValue": "devops-stevy"
     }
   ]
+  
+  
   
