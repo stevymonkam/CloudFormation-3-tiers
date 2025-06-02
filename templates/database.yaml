@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Database resources
+
+Parameters:
+  VPCId:
+    Type: String
+
+Resources:
+
+  RDSSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref VPCId
+      GroupDescription: Allow MySQL
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          CidrIp: 0.0.0.0/0
+
+Outputs:
+  RDSSecurityGroupId:
+    Value: !Ref RDSSecurityGroup

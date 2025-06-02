@@ -1,0 +1,55 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Compute resources and Load Balancer
+
+Parameters:
+  VPCId:
+    Type: String
+  PublicSubnet1Id:
+    Type: String
+  PublicSubnet2Id:
+    Type: String
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+
+Resources:
+
+  ALBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref VPCId
+      GroupDescription: Allow HTTP to ALB
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+  LoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Scheme: internet-facing
+      Subnets:
+        - !Ref PublicSubnet1Id
+        - !Ref PublicSubnet2Id
+      SecurityGroups:
+        - !Ref ALBSecurityGroup
+
+  Instance1:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.nano
+      KeyName: !Ref KeyName
+      ImageId: ami-0c2b8ca1dad447f8a
+      SubnetId: !Ref PublicSubnet1Id
+      SecurityGroupIds:
+        - !Ref ALBSecurityGroup
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash
+          yum update -y
+          amazon-linux-extras install nginx1 -y
+          systemctl start nginx
+
+Outputs:
+  ALBSecurityGroupId:
+    Value: !Ref ALBSecurityGroup
