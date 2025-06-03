@@ -23,8 +23,9 @@ Resources:
         - Key: Name
           Value: my-db-subnet-group
 
-  RDSInstance:
+    RDSInstance:
     Type: AWS::RDS::DBInstance
+    DeletionPolicy: Delete
     Properties:
       DBInstanceIdentifier: my-rds
       Engine: mysql
@@ -40,6 +41,8 @@ Resources:
       DBSubnetGroupName: !Ref DBSubnetGroup
       PubliclyAccessible: false
       BackupRetentionPeriod: 1
+      SkipFinalSnapshot: true
+
 
 Outputs:
   RDSInstanceEndpoint:

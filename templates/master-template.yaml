@@ -14,7 +14,7 @@ Resources:
       TemplateURL: https://terraform-backend-stevy01.s3.amazonaws.com/templates/network.yaml
 
   SecurityGroupsStack:
-    Type: AWS::CloudFormation::Stack
+    Type: AWS::CloudFormation::Stack  
     Properties:
       TemplateURL: https://terraform-backend-stevy01.s3.amazonaws.com/templates/securitygroups.yaml
       Parameters:
