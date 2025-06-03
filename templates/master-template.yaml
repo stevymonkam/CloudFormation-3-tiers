@@ -29,6 +29,8 @@ Resources:
         PublicSubnet2: !GetAtt NetworkStack.Outputs.PublicSubnet2
         ALBSecurityGroup: !GetAtt SecurityGroupsStack.Outputs.ALBSecurityGroup
         VPCId: !GetAtt NetworkStack.Outputs.VPCId
+        EC2SecurityGroup: !GetAtt SecurityGroupsStack.Outputs.EC2SecurityGroup
+
         
 
 
