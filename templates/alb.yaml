@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Application Load Balancer, Target Group and Listener
+Description: Application Load Balancer, Target Group and Listene
 
 Parameters:
   PublicSubnet1:
