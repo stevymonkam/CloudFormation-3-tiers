@@ -8,8 +8,7 @@ Parameters:
     Type: String
   ALBSecurityGroup:
     Type: String
-  EC2SecurityGroup:
-    Type: String
+  
 
 Resources:
   LoadBalancer:

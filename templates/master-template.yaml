@@ -20,7 +20,7 @@ Resources:
       Parameters:
         VPCId: !GetAtt NetworkStack.Outputs.VPCId
 
-  ALBStack:
+    ALBStack:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: https://terraform-backend-stevy01.s3.amazonaws.com/templates/alb.yaml
@@ -29,6 +29,8 @@ Resources:
         PublicSubnet2: !GetAtt NetworkStack.Outputs.PublicSubnet2
         ALBSecurityGroup: !GetAtt SecurityGroupsStack.Outputs.ALBSecurityGroup
         VPCId: !GetAtt NetworkStack.Outputs.VPCId
+        
+
 
   ComputeStack:
     Type: AWS::CloudFormation::Stack
