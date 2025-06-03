@@ -15,7 +15,7 @@ Resources:
   DBSubnetGroup:
     Type: AWS::RDS::DBSubnetGroup
     Properties:
-      DBSubnetGroupDescription: DB subnet group
+      DBSubnetGroupDescription: "DB subnet group for RDS instance"
       SubnetIds:
         - !Ref DatabaseSubnet1
         - !Ref DatabaseSubnet2
@@ -23,7 +23,7 @@ Resources:
         - Key: Name
           Value: my-db-subnet-group
 
-    RDSInstance:
+  RDSInstance:
     Type: AWS::RDS::DBInstance
     DeletionPolicy: Delete
     Properties:
@@ -42,10 +42,15 @@ Resources:
       PubliclyAccessible: false
       BackupRetentionPeriod: 1
       SkipFinalSnapshot: true
-
+      Tags:
+        - Key: Name
+          Value: my-rds-instance
 
 Outputs:
   RDSInstanceEndpoint:
+    Description: Endpoint address of the RDS instance
     Value: !GetAtt RDSInstance.Endpoint.Address
+
   RDSInstanceId:
+    Description: ID of the RDS instance
     Value: !Ref RDSInstance
