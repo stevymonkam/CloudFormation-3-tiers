@@ -4,7 +4,7 @@ CloudFormation is an open-source infrastructure as code (IaC) service provided b
 
 ![1](https://github.com/stevymonkam/CloudFormation-3-tiers/blob/main/images/awscloudformation.PNG)
 
-In this tutorial, I will deploy a three-tier application in AWS using Terraform.
+In this tutorial, I will deploy a three-tier application in AWS using CloudFormation.
 
 ![2](https://github.com/DhruvinSoni30/Terraform-AWS-3tier-Architecture/blob/main/2.png)
 
