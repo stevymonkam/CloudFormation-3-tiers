@@ -1,3 +1,17 @@
+### What is Terraform?
+
+Terraform is an open-source infrastructure as a code (IAC) tool that allows to create, manage & deploy the production-ready environment. Terraform codifies cloud APIs into declarative configuration files. Terraform can manage both existing service providers and custom in-house solutions.
+
+![1](https://github.com/DhruvinSoni30/Terraform-AWS-3tier-Architecture/blob/main/1.png)
+
+In this tutorial, I will deploy a three-tier application in AWS using Terraform.
+
+![2](https://github.com/DhruvinSoni30/Terraform-AWS-3tier-Architecture/blob/main/2.png)
+
+
+
+
+
 # 📦 AWS CloudFormation 3-Tier Architecture with Nested Stacks
 
 This project provisions a complete 3-tier infrastructure on AWS using **CloudFormation nested stacks**. It separates network, security, compute, and database resources into modular templates for better scalability, maintenance, and team collaboration.
