@@ -227,3 +227,9 @@ aws cloudformation delete-stack --stack-name three-tier-dev
 ## 📌 Conclusion
 
 This project provides a clean, modular, production-ready AWS infrastructure as code foundation for 3-tier web applications, fully orchestrated with CloudFormation nested stacks and managed in S3.
+
+![1](https://github.com/stevymonkam/CloudFormation-3-tiers/blob/main/images/Screenshot%20(559).png)
+![1](https://github.com/stevymonkam/CloudFormation-3-tiers/blob/main/images/Screenshot%20(561).png)
+![1](https://github.com/stevymonkam/CloudFormation-3-tiers/blob/main/images/Screenshot%20(563).png)
+![1](https://github.com/stevymonkam/CloudFormation-3-tiers/blob/main/images/Screenshot%20(564).png)
+![1](https://github.com/stevymonkam/CloudFormation-3-tiers/blob/main/images/Screenshot%20(565).png)
