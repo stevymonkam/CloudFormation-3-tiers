@@ -1,29 +1,61 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Master Stack
+Description: Master stack to orchestrate nested stacks for 3-tier infra
 
 Parameters:
   KeyName:
+    Description: SSH Key Pair for EC2
     Type: AWS::EC2::KeyPair::KeyName
 
 Resources:
-  VPCStack:
+
+  NetworkStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://s3.amazonaws.com/terraform-backend-stevy01/templates/network.yaml
+      TemplateURL: https://terraform-backend-stevy01.s3.amazonaws.com/templates/network.yaml
+
+  SecurityGroupsStack:
+    Type: AWS::CloudFormation::Stack  
+    Properties:
+      TemplateURL: https://terraform-backend-stevy01.s3.amazonaws.com/templates/securitygroups.yaml
+      Parameters:
+        VPCId: !GetAtt NetworkStack.Outputs.VPCId
+
+  ALBStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://terraform-backend-stevy01.s3.amazonaws.com/templates/alb.yaml
+      Parameters:
+        PublicSubnet1: !GetAtt NetworkStack.Outputs.PublicSubnet1
+        PublicSubnet2: !GetAtt NetworkStack.Outputs.PublicSubnet2
+        ALBSecurityGroup: !GetAtt SecurityGroupsStack.Outputs.ALBSecurityGroup
+        VPCId: !GetAtt NetworkStack.Outputs.VPCId
+        EC2SecurityGroup: !GetAtt SecurityGroupsStack.Outputs.EC2SecurityGroup
+
+        
+
 
   ComputeStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://s3.amazonaws.com/terraform-backend-stevy01/templates/compute.yaml
+      TemplateURL: https://terraform-backend-stevy01.s3.amazonaws.com/templates/compute.yaml
       Parameters:
-        VPCId: !GetAtt VPCStack.Outputs.VPCId
-        PublicSubnet1Id: !GetAtt VPCStack.Outputs.PublicSubnet1Id
-        PublicSubnet2Id: !GetAtt VPCStack.Outputs.PublicSubnet2Id
         KeyName: !Ref KeyName
+        PublicSubnet1: !GetAtt NetworkStack.Outputs.PublicSubnet1
+        PublicSubnet2: !GetAtt NetworkStack.Outputs.PublicSubnet2
+        EC2SecurityGroup: !GetAtt SecurityGroupsStack.Outputs.EC2SecurityGroup
+        TargetGroupArn: !GetAtt ALBStack.Outputs.TargetGroupArn
 
   DatabaseStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://s3.amazonaws.com/terraform-backend-stevy01/templates/database.yaml
+      TemplateURL: https://terraform-backend-stevy01.s3.amazonaws.com/templates/database.yaml
       Parameters:
-        VPCId: !GetAtt VPCStack.Outputs.VPCId
+        VPCId: !GetAtt NetworkStack.Outputs.VPCId
+        DatabaseSubnet1: !GetAtt NetworkStack.Outputs.DatabaseSubnet1
+        DatabaseSubnet2: !GetAtt NetworkStack.Outputs.DatabaseSubnet2
+        RDSSecurityGroup: !GetAtt SecurityGroupsStack.Outputs.RDSSecurityGroup
+
+Outputs:
+  LoadBalancerDNS:
+    Description: DNS name of the Load Balancer
+    Value: !GetAtt ALBStack.Outputs.LoadBalancerDNS

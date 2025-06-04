@@ -1,55 +1,70 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Compute resources and Load Balancer
+Description: EC2 Instances for the compute tier
 
 Parameters:
-  VPCId:
-    Type: String
-  PublicSubnet1Id:
-    Type: String
-  PublicSubnet2Id:
-    Type: String
   KeyName:
     Type: AWS::EC2::KeyPair::KeyName
+  PublicSubnet1:
+    Type: String
+  PublicSubnet2:
+    Type: String
+  EC2SecurityGroup:
+    Type: String
+  TargetGroupArn:
+    Type: String
 
 Resources:
-
-  ALBSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      VpcId: !Ref VPCId
-      GroupDescription: Allow HTTP to ALB
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
-          CidrIp: 0.0.0.0/0
-
-  LoadBalancer:
-    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
-    Properties:
-      Scheme: internet-facing
-      Subnets:
-        - !Ref PublicSubnet1Id
-        - !Ref PublicSubnet2Id
-      SecurityGroups:
-        - !Ref ALBSecurityGroup
-
   Instance1:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: t2.nano
       KeyName: !Ref KeyName
       ImageId: ami-0c2b8ca1dad447f8a
-      SubnetId: !Ref PublicSubnet1Id
+      SubnetId: !Ref PublicSubnet1
       SecurityGroupIds:
-        - !Ref ALBSecurityGroup
+        - !Ref EC2SecurityGroup
       UserData:
         Fn::Base64: |
           #!/bin/bash
           yum update -y
           amazon-linux-extras install nginx1 -y
+          systemctl enable nginx
           systemctl start nginx
+      Tags:
+        - Key: Name
+          Value: Ec21
 
-Outputs:
-  ALBSecurityGroupId:
-    Value: !Ref ALBSecurityGroup
+  Instance2:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.nano
+      KeyName: !Ref KeyName
+      ImageId: ami-0c2b8ca1dad447f8a
+      SubnetId: !Ref PublicSubnet2
+      SecurityGroupIds:
+        - !Ref EC2SecurityGroup
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash
+          yum update -y
+          amazon-linux-extras install nginx1 -y
+          systemctl enable nginx
+          systemctl start nginx
+      Tags:
+        - Key: Name
+          Value: Ec22
+
+  # Association des instances au Target Group via un TargetGroupAttachment (nécessaire pour ALB)
+  TargetGroupAttachment1:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroupAttachment
+    Properties:
+      TargetGroupArn: !Ref TargetGroupArn
+      TargetId: !Ref Instance1
+      Port: 80
+
+  TargetGroupAttachment2:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroupAttachment
+    Properties:
+      TargetGroupArn: !Ref TargetGroupArn
+      TargetId: !Ref Instance2
+      Port: 80
