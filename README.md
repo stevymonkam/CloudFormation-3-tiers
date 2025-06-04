@@ -2,7 +2,7 @@
 
 CloudFormation is an open-source infrastructure as code (IaC) service provided by AWS that allows you to create, manage, and deploy production-ready environments. CloudFormation codifies AWS resource configurations into declarative YAML or JSON templates. It enables you to manage both existing AWS services and custom resources in a secure, repeatable, and automated way.
 
-![1](https://github.com/DhruvinSoni30/Terraform-AWS-3tier-Architecture/blob/main/1.png)
+![1](https://github.com/stevymonkam/CloudFormation-3-tiers/blob/main/images/awscloudformation.PNG)
 
 In this tutorial, I will deploy a three-tier application in AWS using Terraform.
 
